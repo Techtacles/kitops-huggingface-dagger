@@ -1,0 +1,15 @@
+
+manifestVersion: v1.0.0
+package:
+  name: HuggingFace Model
+  description: 'Download a model on Hugging Face, package as Modelkit and store on Jozu Hub'
+  authors: [Techtacles]
+model:
+  name: pkl Model
+  path: ./models/model.pkl
+  version: 1.0.0
+  description: Model in pkl
+code:
+  - path: ./code
+    description: Model prediction code
+

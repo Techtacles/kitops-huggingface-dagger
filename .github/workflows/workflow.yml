@@ -1,0 +1,47 @@
+name: dagger
+on:
+  push:
+    branches: [master]
+env:
+    JOZU_PASSWORD: ${{ secrets.JOZU_PASSWORD }}
+    JOZU_EMAIL: ${{ secrets.JOZU_EMAIL }}
+    TAG: latest
+    HUGGING_FACE_API_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+    JOZU_HUB_REPO_NAME: kitops-huggingface-dagger
+    DAGGER_CLOUD_TOKEN: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+
+jobs:
+  run-dagger:
+    name: Run Dagger Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install Kit
+        uses: jozu-ai/gh-kit-setup@v1.0.0
+    
+      - name: Pack and push to JozuHub
+        uses: dagger/dagger-for-github@v6
+        with:
+          version: "latest"
+          verb: call --registry jozu.ml
+          module: github.com/jozu-ai/daggerverse/huggingface
+          args: download-file --hfrepo $HUGGING_FACE_REPO --path $HUGGING_FACE_MODEL_PATH --secret env:HUGGING_FACE_API_TOKEN export --path models/model.joblib --allow-parent-dir-path
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+        env:
+            HUGGING_FACE_API_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+            HUGGING_FACE_REPO: poudel/fuel-burn-predictor
+            HUGGING_FACE_MODEL_PATH: fuel_burn_model.pkl
+
+      - name: Pack and push to JozuHub
+        uses: dagger/dagger-for-github@v6
+        with:
+          version: "latest"
+          verb: call --registry jozu.ml
+          module: github.com/jozu-ai/daggerverse/kit
+          args: with-auth --username $JOZU_EMAIL --password env:JOZU_PASSWORD pack --directory . --reference jozu.ml/emmanueloffisongetim/llm_repo:$TAG --kitfile Kitfile push --reference jozu.ml/emmanueloffisongetim/llm_repo:$TAG
+          cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
+        env:
+            JOZU_PASSWORD: ${{ secrets.JOZU_PASSWORD }}
+            JOZU_EMAIL: ${{ secrets.JOZU_EMAIL }}
+            TAG: ${{ env.TAG }}

@@ -1,0 +1,13 @@
+{
+  "name": "kitops-huggingface-dagger",
+  "engineVersion": "v0.15.1",
+  "sdk": "python",
+  "dependencies": [
+    {
+      "name": "kit",
+      "source": "github.com/jozu-ai/daggerverse/kit@kit/v0.1.1",
+      "pin": "fc53d7802be6553298f4f54dd73cc1c1913d4ce6"
+    }
+  ],
+  "source": "dagger"
+}
