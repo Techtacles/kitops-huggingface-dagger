@@ -20,11 +20,11 @@ jobs:
       - name: Install Kit
         uses: jozu-ai/gh-kit-setup@v1.0.0
     
-      - name: Pack and push to JozuHub
+      - name: Download model from HuggingFace to the models folder
         uses: dagger/dagger-for-github@v6
         with:
           version: "latest"
-          verb: call --registry jozu.ml
+          verb: call 
           module: github.com/jozu-ai/daggerverse/huggingface
           args: download-file --hfrepo $HUGGING_FACE_REPO --path $HUGGING_FACE_MODEL_PATH --secret env:HUGGING_FACE_API_TOKEN export --path models/model.joblib --allow-parent-dir-path
           cloud-token: ${{ secrets.DAGGER_CLOUD_TOKEN }}
